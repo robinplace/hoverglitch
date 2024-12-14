@@ -4,33 +4,53 @@
 	"version": "0.0.0",
 	"description": "Ugh",
 	"author": "Robin <hello@robin.place>",
+	"packageManager": "pnpm@9.0.6+sha256.0624e30eff866cdeb363b15061bdb7fd9425b17bc1bb42c22f5f4efdea21f6b3",
+	"engines": {
+		"node": "20.12.2",
+		"pnpm": "9.0.6"
+	},
+	"os": [
+		"darwin",
+		"linux"
+	],
 	"type": "module",
 	"main": "./src/root.ts",
 	"scripts": {
-		"rspack": "tsx ../node_modules/@rspack/cli/bin/rspack.js",
-		"hot": "NODE_ENV=development pnpm rspack serve"
+		"clean": "git clean -X -d -f",
+		"rspack": "tsx ./node_modules/@rspack/cli/bin/rspack.js",
+		"hot": "NODE_ENV=development pnpm rspack -c ./webpack.config.ts serve"
 	},
 	"dependencies": {
 		"@tamagui/config": "1.120.1",
 		"@tamagui/core": "1.120.1",
+		"@tamagui/lucide-icons": "1.120.1",
+		"buffer": "6.0.3",
 		"react": "18.3.1",
 		"react-native": "0.76.5",
 		"react-native-web": "0.19.13",
 		"tamagui": "1.120.1"
 	},
 	"devDependencies": {
-		"prettier": "3.4.2",
-		"typescript": "5.7.2",
+		"@babel/plugin-transform-export-namespace-from": "7.25.9",
 		"@rspack/cli": "1.1.6",
 		"@rspack/core": "1.1.6",
+		"@types/node": "22.10.2",
 		"@types/react": "18.3.1",
 		"@types/react-native-web": "0.19.0",
 		"babel-loader": "9.2.1",
-		"@babel/plugin-transform-export-namespace-from": "7.25.9",
 		"babel-plugin-react-native-web": "0.19.13",
 		"metro-react-native-babel-preset": "0.77.0",
+		"prettier": "3.4.2",
 		"tamagui-loader": "1.120.1",
-		"tsx": "4.10.2"
+		"tsx": "4.10.2",
+		"typescript": "5.7.2"
+	},
+	"prettier": {
+		"printWidth": 120,
+		"useTabs": true,
+		"tabWidth": 2,
+		"semi": false,
+		"singleQuote": true,
+		"trailingComma": "all"
 	}
 }
-

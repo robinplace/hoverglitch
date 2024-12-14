@@ -1,7 +1,13 @@
 import { Configuration } from '@rspack/cli'
-import { DefinePlugin, HtmlRspackPlugin, ProvidePlugin, RuleSetUse, SwcJsMinimizerRspackPlugin } from '@rspack/core'
+import {
+	EnvironmentPlugin,
+	DefinePlugin,
+	HtmlRspackPlugin,
+	ProvidePlugin,
+	SwcJsMinimizerRspackPlugin,
+} from '@rspack/core'
+import { TamaguiPlugin } from 'tamagui-loader'
 import { resolve } from 'path'
-import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin'
 import module from 'module'
 
 // @ts-ignore nasty hack to allow the tamagui compiler to monkey patch stuff
@@ -12,8 +18,6 @@ export const standard_extension_array = [`.js`, `.jsx`, `.ts`, `.tsx`, `.json`]
 
 export default {
 	entry: `./src/root.ts`,
-	devtool: false,
-	devServer: { port: 6600 },
 	experiments: {
 		css: true,
 	},
@@ -32,6 +36,8 @@ export default {
 				// every directory that needs to be compiled by Babel during the build.
 				include: [
 					resolve(import.meta.dirname, `./node_modules/react-native`),
+					resolve(import.meta.dirname, `./node_modules/react-native-svg`),
+					resolve(import.meta.dirname, `./node_modules/@react-native/assets-registry`),
 					resolve(import.meta.dirname, `./node_modules/@mgcrea/react-native-dnd`),
 				],
 				use: {
@@ -70,7 +76,8 @@ export default {
 	resolve: {
 		extensions: [
 			...standard_extension_array.map((extension) => `.web${extension}`), //
-			...standard_extension_array, `.d.ts`
+			...standard_extension_array,
+			`.d.ts`,
 		],
 		alias: {
 			'react-native$': `react-native-web`,
@@ -79,20 +86,20 @@ export default {
 	plugins: [
 		new EnvironmentPlugin([`NODE_ENV`]),
 		new TamaguiPlugin({
-			config: `./src/Stylishness.tsx`,
+			config: `./src/tamagui.config.ts`,
 			components: [`tamagui`],
 			disableExtraction: !is_production,
 		}),
 		new HtmlRspackPlugin({
-			title: `ScriptFlow`,
+			title: `hoverglitch`,
 			inject: false,
 			templateContent: ({ htmlRspackPlugin }) => `
 			<html>
 				<head>
 					${htmlRspackPlugin.tags.headTags}
-					<style>:root { background-color: #000; color: #fff; }</style>
 				</head>
 				<body>
+					<div id="root"></div>
 					${htmlRspackPlugin.tags.bodyTags}
 				</body>
 			</html>
@@ -105,7 +112,6 @@ export default {
 			'process.env': `({})`,
 			'process.env.BUILD': JSON.stringify(`web`),
 		}),
-		process.env.RSDOCTOR && new RsdoctorRspackPlugin({ supports: { generateTileGraph: true } }),
 	],
 	optimization: {
 		minimizer: [new SwcJsMinimizerRspackPlugin({ minimizerOptions: { compress: true, mangle: true } })],
@@ -114,4 +120,3 @@ export default {
 		path: resolve(import.meta.dirname, `./web`),
 	},
 } satisfies Configuration
-

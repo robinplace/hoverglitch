@@ -13,4 +13,3 @@
 	"exclude": ["./node_modules"],
 	"files": ["./src/root.ts"]
 }
-
